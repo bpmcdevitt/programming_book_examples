@@ -1,0 +1,133 @@
+<WikipediaPage 'Decorator pattern'>
+
+
+In object-oriented programming, the decorator pattern is a design pattern that allows behavior to be added to an individual object, either statically or dynamically, without affecting the behavior of other objects from the same class. The decorator pattern is often useful for adhering to the Single Responsibility Principle, as it allows functionality to be divided between classes with unique areas of concern. The decorator pattern is structurally nearly identical to the chain of responsibility pattern, the difference being that in a chain of responsibility, exactly one of the classes handles the request, while for the decorator, all classes handle the request.
+
+
+== Overview ==
+The Decorator  design pattern is one of the twenty-three well-known GoF design patterns that describe how to solve recurring design problems to design flexible and reusable object-oriented software, that is, objects that are easier to implement, change, test, and reuse.
+What problems can the Decorator design pattern solve? 
+Responsibilities should be added to (and removed from) an object dynamically at run-time.
+A flexible alternative to subclassing for extending functionality should be provided.
+When using subclassing, different subclasses extend a class in different ways. But an extension is bound to the class at compile-time and can't be changed at run-time.
+What solution does the Decorator design pattern describe?
+Define Decorator objects that
+implement the interface of the extended (decorated) object (Component) transparently by forwarding all requests to it and
+perform additional functionality before/after forwarding a request.
+This enables to work through different Decorator objects to extend the functionality of an object dynamically at run-time.
+See also the UML class and sequence diagram below.
+
+
+== Intent ==
+
+The decorator pattern can be used to extend (decorate) the functionality of a certain object statically, or in some cases at run-time, independently of other instances of the same class, provided some groundwork is done at design time. This is achieved by designing a new Decorator class that wraps the original class. This wrapping could be achieved by the following sequence of steps:
+Subclass the original Component class into a Decorator class (see UML diagram);
+In the Decorator class, add a Component pointer as a field;
+In the Decorator class, pass a Component to the Decorator constructor to initialize the Component pointer;
+In the Decorator class, forward all Component methods to the Component pointer; and
+In the ConcreteDecorator class, override any Component method(s) whose behavior needs to be modified.
+This pattern is designed so that multiple decorators can be stacked on top of each other, each time adding a new functionality to the overridden method(s).
+Note that decorators and the original class object share a common set of features. In the previous diagram, the operation() method was available in both the decorated and undecorated versions.
+The decoration features (e.g., methods, properties, or other members) are usually defined by an interface, mixin (a.k.a. trait) or class inheritance which is shared by the decorators and the decorated object. In the previous example the class Component is inherited by both the ConcreteComponent and the subclasses that descend from Decorator.
+The decorator pattern is an alternative to subclassing. Subclassing adds behavior at compile time, and the change affects all instances of the original class; decorating can provide new behavior at run-time for selective objects.
+This difference becomes most important when there are several independent ways of extending functionality. In some object-oriented programming languages, classes cannot be created at runtime, and it is typically not possible to predict, at design time, what combinations of extensions will be needed. This would mean that a new class would have to be made for every possible combination. By contrast, decorators are objects, created at runtime, and can be combined on a per-use basis. The I/O Streams implementations of both Java and the .NET Framework incorporate the decorator pattern.
+
+
+== Motivation ==
+
+As an example, consider a window in a windowing system. To allow scrolling of the window's contents, one may wish to add horizontal or vertical scrollbars to it, as appropriate. Assume windows are represented by instances of the Window class, and assume this class has no functionality for adding scrollbars. One could create a subclass ScrollingWindow that provides them, or create a ScrollingWindowDecorator that adds this functionality to existing Window objects. At this point, either solution would be fine.
+Now, assume one also desires the ability to add borders to windows. Again, the original Window class has no support. The ScrollingWindow subclass now poses a problem, because it has effectively created a new kind of window. If one wishes to add border support to many but not all windows, one must create subclasses WindowWithBorder and ScrollingWindowWithBorder etc. This problem gets worse with every new feature or window subtype to be added. For the decorator solution, we simply create a new BorderedWindowDecorator—at runtime, we can decorate existing windows with the ScrollingWindowDecorator or the BorderedWindowDecorator or both, as we see fit. Notice that if the functionality needs to be added to all Windows, you could modify the base class and that will do. On the other hand, sometimes (e.g., using external frameworks) it is not possible, legal, or convenient to modify the base class.
+Note, in the previous example, that the "SimpleWindow" and "WindowDecorator" classes implement the "Window" interface, which defines the "draw()" method and the "getDescription()" method, that are required in this scenario, in order to decorate a window control.
+
+
+== Usage ==
+A decorator makes it possible to add or alter behavior of an interface at run-time. Alternatively, the adapter can be used when the wrapper must respect a particular interface and must support polymorphic behavior, and the Facade when an easier or simpler interface to an underlying object is desired.
+
+
+== Structure ==
+
+
+=== UML class and sequence diagram ===
+
+In the above UML class diagram, the abstract Decorator class maintains a reference (component) to the decorated object (Component) and forwards all requests to it (component.operation()). This makes Decorator transparent (invisible) to clients of Component.
+Subclasses (Decorator1,Decorator2) implement additional behavior (addBehavior()) that should be added to the Component (before/after forwarding a request to it).
+The sequence diagram shows the run-time interactions: The Client object works through Decorator1 and Decorator2 objects to extend the functionality of a Component1 object.
+The Client calls operation() on Decorator1, which forwards the request to Decorator2. Decorator2 performs addBehavior() after forwarding the request to Component1 and returns to Decorator1, which performs addBehavior() and returns to the Client.
+
+
+== Examples ==
+
+
+=== C++ ===
+Two options are presented here, first a dynamic, runtime-composable decorator (has issues with calling decorated functions unless proxied explicitly) and a decorator that uses mixin inheritance.
+
+
+==== Dynamic Decorator ====
+
+
+==== Static Decorator (Mixin Inheritance) ====
+This example demonstrates a static Decorator implementation, which is possible due to C++ ability to inherit from the template argument.
+
+
+=== Java ===
+
+
+==== First example (window/scrolling scenario) ====
+The following Java example illustrates the use of decorators using the window/scrolling scenario.
+
+The following classes contain the decorators for all Window classes, including the decorator classes themselves.
+
+Here's a test program that creates a Window instance which is fully decorated (i.e., with vertical and horizontal scrollbars), and prints its description:
+
+Below is the JUnit test class for the Test Driven Development
+
+The output of this program is "simple window, including vertical scrollbars, including horizontal scrollbars". Notice how the getDescription method of the two decorators first retrieve the decorated Window's description and decorates it with a suffix.
+
+
+==== Second example (coffee making scenario) ====
+The next Java example illustrates the use of decorators using coffee making scenario. In this example, the scenario only includes cost and ingredients.
+
+The following classes contain the decorators for all Coffee classes, including the decorator classes themselves..
+
+Here's a test program that creates a Coffee instance which is fully decorated (with milk and sprinkles), and calculate cost of coffee and prints its ingredients:
+
+The output of this program is given below:
+
+Cost: 1.0; Ingredients: Coffee
+Cost: 1.5; Ingredients: Coffee, Milk
+Cost: 1.7; Ingredients: Coffee, Milk, Sprinkles
+
+
+=== PHP ===
+
+
+=== Python ===
+Python includes a more natural way of decorating a function by using an annotation on the function that is decorated.
+This example is incorrect: "The DecoratorPattern is a pattern described in the DesignPatternsBook. It is a way of apparently modifying an object's behavior, by enclosing it inside a decorating object with a similar interface. This is not to be confused with PythonDecorators, which is a language feature for dynamically modifying a function or class."
+
+A correct example taken from: https://wiki.python.org/moin/DecoratorPattern
+
+
+=== Crystal ===
+
+Output:
+
+Cost: 1.0; Ingredients: Coffee
+Cost: 1.5; Ingredients: Coffee, Milk
+Cost: 1.7; Ingredients: Coffee, Milk, Sprinkles
+
+
+== See also ==
+Composite pattern
+Adapter pattern
+Abstract class
+Abstract factory
+Aspect-oriented programming
+Immutable object
+
+
+== References ==
+
+
+== External links ==
+Decorator pattern description from the Portland Pattern Repository
