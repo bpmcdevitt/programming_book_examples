@@ -1,0 +1,12 @@
+* Strucutre and Interpretation of Computer Programs
+** workflow: gnu info file with sicp: [[https://github.com/webframp/sicp-info][github_link]
+** we will use org mode and babel to evaluate the mit-scheme exmaples from the book as we work through it
+*** Chapter 1
+    # Scratch evaluation buffer
+     #+BEGIN_SRC scheme :tangle yes :noweb yes :results value
+     (define (square x) ( * x x))
+     (square 10)
+     #+END_SRC 
+
+     #+RESULTS:
+     : 100
